@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تأكيد الشراء</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      background-color: #f5f5f7;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background-color: white;
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .summary {
+      margin-top: 20px;
+      background-color: #f1f1f3;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>تأكيد عملية الشراء</h2>
+
+    <div class="summary">
+      <p><strong>الموبايل:</strong> <span id="model"></span></p>
+      <p><strong>اللون:</strong> <span id="color"></span></p>
+      <p><strong>السعر:</strong> <span id="price"></span> جنيه</p>
+    </div>
+
+    <form onsubmit="submitForm(event)">
+      <label>الاسم الكامل</label>
+      <input type="text" required id="name">
+
+      <label>رقم الهاتف</label>
+      <input type="tel" required id="phone">
+
+      <label>العنوان</label>
+      <input type="text" required id="address">
+
+      <button type="submit">تأكيد الشراء</button>
+    </form>
+  </div>
+
+  <script>
+    // قراءة بيانات من الرابط
+    const urlParams = new URLSearchParams(window.location.search);
+    const model = urlParams.get('model');
+    const color = urlParams.get('color');
+    const price = urlParams.get('price');
+
+    document.getElementById('model').textContent = model;
+    document.getElementById('color').textContent = color;
+    document.getElementById('price').textContent = price;
+
+    function submitForm(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+
+      alert(
+        `✅ تم تأكيد الطلب:\n\nالاسم: ${name}\nالهاتف: ${phone}\nالعنوان: ${address}\nالجهاز: ${model} - ${color}\nالسعر: ${price} جنيه`
+      );
+    }
+  </script>
+</body>
+</html>

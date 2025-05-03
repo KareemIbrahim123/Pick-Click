@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>متجر أبل - عربي</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      background-color: #f5f5f7;
+      margin: 0;
+      padding: 20px;
+      color: #1d1d1f;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 32px;
+    }
+    .phone-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+    .phone {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 320px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .phone:hover {
+      transform: translateY(-5px);
+    }
+    .phone img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .color-select {
+      margin: 10px 0;
+      padding: 5px;
+      font-size: 16px;
+    }
+    .price {
+      font-size: 18px;
+      margin: 10px 0;
+      font-weight: bold;
+      color: #0071e3;
+    }
+    button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    @media (max-width: 768px) {
+      .phone-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>اختر موبايلك المفضل</h1>
+  <div class="phone-container">
+
+    <!-- iPhone 15 -->
+    <div class="phone">
+      <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-og-202309?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1694731257062" alt="iPhone 15">
+      <h2>iPhone 15</h2>
+      <select class="color-select" onchange="updatePrice(this, 'price1', {'أسود': 43000, 'أزرق': 44000, 'أحمر': 45000})">
+        <option disabled selected>اختر اللون</option>
+        <option value="أسود">أسود</option>
+        <option value="أزرق">أزرق</option>
+        <option value="أحمر">أحمر</option>
+      </select>
+      <div id="price1" class="price">السعر: -</div>
+      <button onclick="buyNow('iPhone 15')">شراء الآن</button>
+    </div>
+
+    <!-- iPhone 14 -->
+    <div class="phone">
+      <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-14-model-unselect-gallery-1-202209?wid=5120&hei=2880&fmt=jpeg&qlt=80&.v=1662055818497" alt="iPhone 14">
+      <h2>iPhone 14</h2>
+      <select class="color-select" onchange="updatePrice(this, 'price2', {'أسود': 39000, 'أبيض': 39500, 'بنفسجي': 40000})">
+        <option disabled selected>اختر اللون</option>
+        <option value="أسود">أسود</option>
+        <option value="أبيض">أبيض</option>
+        <option value="بنفسجي">بنفسجي</option>
+      </select>
+      <div id="price2" class="price">السعر: -</div>
+      <button onclick="buyNow('iPhone 14')">شراء الآن</button>
+    </div>
+
+    <!-- iPhone 14 Plus -->
+    <div class="phone">
+      <img src="https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-14-plus-pink-select-202209?wid=5120&hei=2880&fmt=jpeg&qlt=80&.v=1660744444849" alt="iPhone 14 Plus">
+      <h2>iPhone 14 Plus</h2>
+      <select class="color-select" onchange="updatePrice(this, 'price3', {'أخضر': 42000, 'أزرق': 42500, 'ذهبي': 43500})">
+        <option disabled selected>اختر اللون</option>
+        <option value="أخضر">أخضر</option>
+        <option value="أزرق">أزرق</option>
+        <option value="ذهبي">ذهبي</option>
+      </select>
+      <div id="price3" class="price">السعر: -</div>
+      <button onclick="buyNow('iPhone 14 Plus')">شراء الآن</button>
+    </div>
+
+  </div>
+
+  <script>
+    function updatePrice(selectElement, priceId, prices) {
+      const selectedColor = selectElement.value;
+      const price = prices[selectedColor];
+      document.getElementById(priceId).textContent = "السعر: " + price + " جنيه";
+    }
+
+    function buyNow(model) {
+  const select = event.target.parentElement.querySelector("select");
+  const color = select.value;
+  const prices = {
+    'iPhone 15': {'أسود': 43000, 'أزرق': 44000, 'أحمر': 45000},
+    'iPhone 14': {'أسود': 39000, 'أبيض': 39500, 'بنفسجي': 40000},
+    'iPhone 14 Plus': {'أخضر': 42000, 'أزرق': 42500, 'ذهبي': 43500},
+  };
+  const price = prices[model][color];
+
+  if (!color) {
+    alert("من فضلك اختر اللون أولاً");
+    return;
+  }
+
+  const url = `checkout.html?model=${encodeURIComponent(model)}&color=${encodeURIComponent(color)}&price=${price}`;
+  window.location.href = url;
+}
+
+  </script>
+</body>
+</html>
