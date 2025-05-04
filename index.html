@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Pick & Click</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      background-color: #f5f5f7;
+      margin: 0;
+      padding: 20px;
+      color: #1d1d1f;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 32px;
+    }
+    .phone-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+    .phone {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 320px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .phone:hover {
+      transform: translateY(-5px);
+    }
+    .phone img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .color-select {
+      margin: 10px 0;
+      padding: 5px;
+      font-size: 16px;
+    }
+    .price {
+      font-size: 18px;
+      margin: 10px 0;
+      font-weight: bold;
+      color: #0071e3;
+    }
+    button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    @media (max-width: 768px) {
+      .phone-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="lang-toggle" onclick="toggleLang()">English</button>
+  <h1 data-ar="اختر موبايلك المفضل" data-en="Choose Your Favorite Phone">اختر موبايلك المفضل</h1>
+  <div class="phone-container">
+
+    <!-- iPhone 15 -->
+    <div class="phone">
+      <img src="712i-Bxl8qL.jpg" alt="iPhone 15">
+      <h2 data-ar="آيفون 15" data-en="iPhone 15">iPhone 15</h2>
+      <select class="color-select" onchange="updatePrice(this, 'price1', {'أسود': 43000, 'أزرق': 44000, 'أحمر': 45000})">
+        <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
+        <option value="أسود" data-ar="أسود" data-en="Black">أسود</option>
+        <option value="أزرق" data-ar="أزرق" data-en="Blue">أزرق</option>
+        <option value="أحمر" data-ar="أحمر" data-en="Red">أحمر</option>
+      </select>
+      <select class="specs">
+        <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
+        <option value="6GB/128GB">6GB / 128GB</option>
+        <option value="8GB/256GB">8GB / 256GB</option>
+      </select>
+      <div id="price1" class="price" data-ar="السعر: -" data-en="Price: -">السعر: -</div>
+      <button onclick="buyNow('iPhone 15')" data-ar="شراء الآن" data-en="Buy Now">شراء الآن</button>
+    </div>
+
+    <!-- iPhone 14 -->
+    <div class="phone">
+      <img src="iphone_14_blue-5_3.jpg" alt="iPhone 14">
+      <h2 data-ar="آيفون 14" data-en="iPhone 14">iPhone 14</h2>
+      <select class="color-select" onchange="updatePrice(this, 'price2', {'أسود': 39000, 'أبيض': 39500, 'بنفسجي': 40000})">
+        <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
+        <option value="أسود" data-ar="أسود" data-en="Black">أسود</option>
+        <option value="أبيض" data-ar="أبيض" data-en="White">أبيض</option>
+        <option value="بنفسجي" data-ar="بنفسجي" data-en="Purple">بنفسجي</option>
+      </select>
+      <select class="specs">
+        <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
+        <option value="6GB/128GB">6GB / 128GB</option>
+        <option value="8GB/256GB">8GB / 256GB</option>
+      </select>
+      <div id="price2" class="price" data-ar="السعر: -" data-en="Price: -">السعر: -</div>
+      <button onclick="buyNow('iPhone 14')" data-ar="شراء الآن" data-en="Buy Now">شراء الآن</button>
+    </div>
+
+    <!-- iPhone 14 Plus -->
+    <div class="phone">
+      <img src="14-red-1662901725.jpg">
+      <h2 data-ar="آيفون 14 بلس" data-en="iPhone 14 Plus">iPhone 14 Plus</h2>
+      <select class="color-select" onchange="updatePrice(this, 'price3', {'أخضر': 42000, 'أزرق': 42500, 'ذهبي': 43500})">
+        <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
+        <option value="أخضر" data-ar="أخضر" data-en="Green">أخضر</option>
+        <option value="أزرق" data-ar="أزرق" data-en="Blue">أزرق</option>
+        <option value="ذهبي" data-ar="ذهبي" data-en="Gold">ذهبي</option>
+      </select>
+      <select class="specs">
+        <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
+        <option value="6GB/128GB">6GB / 128GB</option>
+        <option value="8GB/256GB">8GB / 256GB</option>
+      </select>
+      <div id="price3" class="price" data-ar="السعر: -" data-en="Price: -">السعر: -</div>
+      <button onclick="buyNow('iPhone 14 Plus')" data-ar="شراء الآن" data-en="Buy Now">شراء الآن</button>
+    </div>
+
+  </div>
+  <!-- Added new phones -->
+  <div class="phone-container">
+  <div class="phone">
+    <img src="iphone-15-pro-natural_natural_titanium_5.jpg" alt="iPhone 15 Pro Max">
+    <h2 data-ar="آيفون 15 برو ماكس" data-en="iPhone 15 Pro Max">iPhone 15 Pro Max</h2>
+    <select class="color-select" onchange="updatePrice(this, 'price4', {'ذهبي': 55000, 'فضي': 56000, 'أسود': 57000})">
+      <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
+      <option value="ذهبي" data-ar="ذهبي" data-en="Gold">ذهبي</option>
+      <option value="فضي" data-ar="فضي" data-en="Silver">فضي</option>
+      <option value="أسود" data-ar="أسود" data-en="Black">أسود</option>
+    </select>
+    <select class="specs">
+      <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
+      <option value="8GB/256GB">8GB / 256GB</option>
+      <option value="12GB/512GB">12GB / 512GB</option>
+    </select>
+    <div id="price4" class="price" data-ar="السعر: -" data-en="Price: -">السعر: -</div>
+    <button onclick="buyNow('iPhone 15 Pro Max')" data-ar="شراء الآن" data-en="Buy Now">شراء الآن</button>
+  </div>
+
+  <div class="phone">
+    <img src="iphone-16-pro-max-black.jpg" alt="iPhone 16">
+    <h2 data-ar="آيفون 16" data-en="iPhone 16">iPhone 16</h2>
+    <select class="color-select" onchange="updatePrice(this, 'price5', {'أزرق': 60000, 'أخضر': 61000, 'رمادي': 62000})">
+      <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
+      <option value="أزرق" data-ar="أزرق" data-en="Blue">أزرق</option>
+      <option value="أخضر" data-ar="أخضر" data-en="Green">أخضر</option>
+      <option value="رمادي" data-ar="رمادي" data-en="Gray">رمادي</option>
+    </select>
+    <select class="specs">
+      <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
+      <option value="8GB/256GB">8GB / 256GB</option>
+      <option value="12GB/512GB">12GB / 512GB</option>
+    </select>
+    <div id="price5" class="price" data-ar="السعر: -" data-en="Price: -">السعر: -</div>
+    <button onclick="buyNow('iPhone 16')" data-ar="شراء الآن" data-en="Buy Now">شراء الآن</button>
+  </div>
+
+  <div class="phone">
+    <img src="iPhone_16_Pink_PDP_Image_Position_1__en-WW.jpg" alt="iPhone 16 Pro">
+    <h2 data-ar="آيفون 16 برو" data-en="iPhone 16 Pro">iPhone 16 Pro</h2>
+    <select class="color-select" onchange="updatePrice(this, 'price6', {'فضي': 65000, 'ذهبي': 66000, 'أسود': 67000})">
+      <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
+      <option value="فضي" data-ar="فضي" data-en="Silver">فضي</option>
+      <option value="ذهبي" data-ar="ذهبي" data-en="Gold">ذهبي</option>
+      <option value="أسود" data-ar="أسود" data-en="Black">أسود</option>
+    </select>
+    <select class="specs">
+      <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
+      <option value="12GB/512GB">12GB / 512GB</option>
+      <option value="16GB/1TB">16GB / 1TB</option>
+    </select>
+    <div id="price6" class="price" data-ar="السعر: -" data-en="Price: -">السعر: -</div>
+    <button onclick="buyNow('iPhone 16 Pro')" data-ar="شراء الآن" data-en="Buy Now">شراء الآن</button>
+  </div>
+  </div>
+  
+  
+  <script>
+    // Add prices for new models
+    const additionalPrices = {
+      'iPhone 15 Pro Max': {
+        'ذهبي': {
+          '8GB/256GB': 55000,
+          '12GB/512GB': 60000
+        },
+        'فضي': {
+          '8GB/256GB': 56000,
+          '12GB/512GB': 61000
+        },
+        'أسود': {
+          '8GB/256GB': 57000,
+          '12GB/512GB': 62000
+        }
+      },
+      'iPhone 16': {
+        'أزرق': {
+          '8GB/256GB': 60000,
+          '12GB/512GB': 65000
+        },
+        'أخضر': {
+          '8GB/256GB': 61000,
+          '12GB/512GB': 66000
+        },
+        'رمادي': {
+          '8GB/256GB': 62000,
+          '12GB/512GB': 67000
+        }
+      },
+      'iPhone 16 Pro': {
+        'فضي': {
+          '12GB/512GB': 65000,
+          '16GB/1TB': 70000
+        },
+        'ذهبي': {
+          '12GB/512GB': 66000,
+          '16GB/1TB': 71000
+        },
+        'أسود': {
+          '12GB/512GB': 67000,
+          '16GB/1TB': 72000
+        }
+      }
+    };
+
+    // Merge additionalPrices into existing prices in buyNow function
+    const originalBuyNow = buyNow;
+    buyNow = function(model) {
+      const parent = event.target.parentElement;
+      const color = parent.querySelector(".color-select").value;
+      const specs = parent.querySelector(".specs").value;
+
+      const prices = {
+        'iPhone 15': {
+          'أسود': {
+            '6GB/128GB': 43000,
+            '8GB/256GB': 47000
+          },
+          'أزرق': {
+            '6GB/128GB': 44000,
+            '8GB/256GB': 48000
+          }
+        }
+        // كمل لباقي الموديلات
+      };
+
+      // Merge additionalPrices
+      for (const modelName in additionalPrices) {
+        prices[modelName] = additionalPrices[modelName];
+      }
+
+      if (!color || !specs) {
+        alert(document.documentElement.lang === 'ar' ? "من فضلك اختر اللون والمواصفات" : "Please choose color and specs");
+        return;
+      }
+
+      const price = prices[model][color][specs];
+
+      const url = `checkout.html?model=${encodeURIComponent(model)}&color=${encodeURIComponent(color)}&specs=${encodeURIComponent(specs)}&price=${price}`;
+      window.location.href = url;
+    };
+  </script>
+  
+
+  <script>
+    function updatePrice(selectElement, priceId, prices) {
+      const selectedColor = selectElement.value;
+      const price = prices[selectedColor];
+      document.getElementById(priceId).textContent = (document.documentElement.lang === 'ar' ? "السعر: " : "Price: ") + price + (document.documentElement.lang === 'ar' ? " جنيه" : " EGP");
+    }
+
+    function buyNow(model) {
+      const parent = event.target.parentElement;
+      const color = parent.querySelector(".color-select").value;
+      const specs = parent.querySelector(".specs").value;
+
+      const prices = {
+        'iPhone 15': {
+          'أسود': {
+            '6GB/128GB': 43000,
+            '8GB/256GB': 47000
+          },
+          'أزرق': {
+            '6GB/128GB': 44000,
+            '8GB/256GB': 48000
+          }
+        }
+        // كمل لباقي الموديلات
+      };
+
+      if (!color || !specs) {
+        alert(document.documentElement.lang === 'ar' ? "من فضلك اختر اللون والمواصفات" : "Please choose color and specs");
+        return;
+      }
+
+      const price = prices[model][color][specs];
+
+      const url = `checkout.html?model=${encodeURIComponent(model)}&color=${encodeURIComponent(color)}&specs=${encodeURIComponent(specs)}&price=${price}`;
+      window.location.href = url;
+    }
+
+    function toggleLang() {
+      const isArabic = document.documentElement.lang === 'ar';
+      document.documentElement.lang = isArabic ? 'en' : 'ar';
+      document.documentElement.dir = isArabic ? 'ltr' : 'rtl';
+      document.querySelector('.lang-toggle').textContent = isArabic ? 'عربي' : 'English';
+      document.querySelectorAll('[data-ar]').forEach(el => {
+        el.textContent = isArabic ? el.dataset.en : el.dataset.ar;
+      });
+    }
+  </script>
+    <footer>
+      &copy; 2025 Pick&Click. All rights reserved.
+  </footer>
+</body>
+</html>
