@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>متجر أبل - الصفحة الرئيسية</title>
+  <style>
+    body { font-family: sans-serif; background: #f1f1f1; margin: 0; padding: 20px; }
+    .container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .product-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 250px;
+      text-align: center;
+    }
+    img { width: 100%; border-radius: 8px; }
+    h2 { margin: 10px 0; font-size: 20px; }
+    select, button {
+      width: 100%; padding: 10px; margin: 5px 0;
+      border-radius: 6px; border: 1px solid #ccc;
+    }
+    button { background: black; color: white; cursor: pointer; }
+    .price { margin: 10px 0; font-weight: bold; }
+    .lang-toggle {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button class="lang-toggle" onclick="toggleLang()">English</button>
+  <h1 style="text-align:center" data-ar="متجر أبل - بالعربي" data-en="Apple Store - Arabic">متجر أبل - بالعربي</h1>
+  <div class="container" id="product-container"></div>
+
+  <script>
+    const products = [
+      {
+        model: 'iPhone 15',
+        image: 'iphone15.jpg',
+        colors: ['أسود', 'أزرق'],
+        specs: ['6GB/128GB', '8GB/256GB']
+      },
+      {
+        model: 'iPhone 14',
+        image: 'iphone14.jpg',
+        colors: ['أسود', 'أبيض'],
+        specs: ['6GB/128GB', '6GB/256GB']
+      },
+      {
+        model: 'iPhone 14 Plus',
+        image: 'iphone14plus.jpg',
+        colors: ['أحمر', 'فضي'],
+        specs: ['6GB/128GB', '6GB/512GB']
+      }
+    ];
+
+    const prices = {
+      'iPhone 15': {
+        'أسود': {
+          '6GB/128GB': 43000,
+          '8GB/256GB': 47000
+        },
+        'أزرق': {
+          '6GB/128GB': 44000,
+          '8GB/256GB': 48000
+        }
+      },
+      'iPhone 14': {
+        'أسود': {
+          '6GB/128GB': 38000,
+          '6GB/256GB': 42000
+        },
+        'أبيض': {
+          '6GB/128GB': 38500,
+          '6GB/256GB': 42500
+        }
+      },
+      'iPhone 14 Plus': {
+        'أحمر': {
+          '6GB/128GB': 40000,
+          '6GB/512GB': 50000
+        },
+        'فضي': {
+          '6GB/128GB': 40500,
+          '6GB/512GB': 50500
+        }
+      }
+    };
+
+    const container = document.getElementById('product-container');
+
+    products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <h2><a href="product.html?model=${encodeURIComponent(product.model)}">${product.model}</a></h2>
+        <img src="${product.image}" alt="${product.model}">
+
+        <select class="color">
+          <option disabled selected value="">اختر اللون</option>
+          ${product.colors.map(c => `<option value="${c}">${c}</option>`).join('')}
+        </select>
+
+        <select class="specs">
+          <option disabled selected value="">اختر الرام والمساحة</option>
+          ${product.specs.map(s => `<option value="${s}">${s}</option>`).join('')}
+        </select>
+
+        <p class="price">السعر: --</p>
+        <button onclick="buyNow('${product.model}', this)" data-ar="شراء الآن" data-en="Buy Now">شراء الآن</button>
+      `;
+      container.appendChild(card);
+
+      const colorSelect = card.querySelector('.color');
+      const specSelect = card.querySelector('.specs');
+      const priceTag = card.querySelector('.price');
+
+      function updatePrice() {
+        const color = colorSelect.value;
+        const specs = specSelect.value;
+        if (prices[product.model] && prices[product.model][color] && prices[product.model][color][specs]) {
+          priceTag.textContent = `السعر: ${prices[product.model][color][specs]} جنيه`;
+        } else {
+          priceTag.textContent = "السعر: --";
+        }
+      }
+
+      colorSelect.addEventListener('change', updatePrice);
+      specSelect.addEventListener('change', updatePrice);
+    });
+
+    function buyNow(model, button) {
+      const card = button.closest('.product-card');
+      const color = card.querySelector('.color').value;
+      const specs = card.querySelector('.specs').value;
+
+      if (!color || !specs) {
+        alert("من فضلك اختر اللون والمواصفات");
+        return;
+      }
+
+      const price = prices[model][color][specs];
+      const url = `checkout.html?model=${encodeURIComponent(model)}&color=${encodeURIComponent(color)}&specs=${encodeURIComponent(specs)}&price=${price}`;
+      window.location.href = url;
+    }
+
+    function toggleLang() {
+      const isArabic = document.documentElement.lang === 'ar';
+      document.documentElement.lang = isArabic ? 'en' : 'ar';
+      document.documentElement.dir = isArabic ? 'ltr' : 'rtl';
+      document.querySelector('.lang-toggle').textContent = isArabic ? 'عربي' : 'English';
+      document.querySelectorAll('[data-ar]').forEach(el => {
+        el.textContent = isArabic ? el.dataset.en : el.dataset.ar;
+      });
+    }
+  </script>
+</body>
+</html>
