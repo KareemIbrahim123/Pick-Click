@@ -4,12 +4,21 @@
   <meta charset="UTF-8">
   <title>Pick & Click</title>
   <style>
+    #cart {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+#cart-items li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #0c3457;
+}
     * {
       box-sizing: border-box;
     }
     body {
       font-family: "Helvetica Neue", sans-serif;
-      background-color: #f5f5f7;
+      background-color: white;
       margin: 0;
       padding: 20px;
       color: #1d1d1f;
@@ -21,12 +30,12 @@
     }
     .phone-container {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap:wrap-reverse;
       justify-content: center;
-      gap: 30px;
+      gap: 200px;
     }
     .phone {
-      background-color: white;
+      background-color: rgb(255, 255, 255);
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       padding: 20px;
@@ -75,6 +84,12 @@
       }
     }
   </style>
+  <style>
+    button:disabled {
+      background-color: #cccccc !important;
+      cursor: not-allowed !important;
+    }
+  </style>
 </head>
 <body>
   <button class="lang-toggle" onclick="toggleLang()">English</button>
@@ -84,14 +99,22 @@
     <!-- iPhone 15 -->
     <div class="phone">
       <img src="712i-Bxl8qL.jpg" alt="iPhone 15">
-      <h2 data-ar="آيفون 15" data-en="iPhone 15">iPhone 15</h2>
-      <select class="color-select" onchange="updatePrice(this, 'price1', {'أسود': 43000, 'أزرق': 44000, 'أحمر': 45000})">
+      <h2>
+        <a href="product.html?model=iPhone%2015"
+           data-ar="آيفون 15"
+           data-en="iPhone 15"
+           style="text-decoration: none; color: inherit;">
+          iPhone 15
+        </a>
+      </h2>
+      
+      <select class="color-select" onchange="updatePrice(this, 'price1')">
         <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
         <option value="أسود" data-ar="أسود" data-en="Black">أسود</option>
         <option value="أزرق" data-ar="أزرق" data-en="Blue">أزرق</option>
         <option value="أحمر" data-ar="أحمر" data-en="Red">أحمر</option>
       </select>
-      <select class="specs">
+      <select class="specs" onchange="updatePrice(this, 'price1', {'أسود': 43000, 'أزرق': 44000, 'أحمر': 45000})">
         <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
         <option value="6GB/128GB">6GB / 128GB</option>
         <option value="8GB/256GB">8GB / 256GB</option>
@@ -103,14 +126,21 @@
     <!-- iPhone 14 -->
     <div class="phone">
       <img src="iphone_14_blue-5_3.jpg" alt="iPhone 14">
-      <h2 data-ar="آيفون 14" data-en="iPhone 14">iPhone 14</h2>
+      <h2>
+        <a href="product.html?model=iPhone%2014"
+           data-ar="آيفون 14"
+           data-en="iPhone 14"
+           style="text-decoration: none; color: inherit;">
+          iPhone 14
+        </a>
+      </h2>
       <select class="color-select" onchange="updatePrice(this, 'price2', {'أسود': 39000, 'أبيض': 39500, 'بنفسجي': 40000})">
         <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
         <option value="أسود" data-ar="أسود" data-en="Black">أسود</option>
         <option value="أبيض" data-ar="أبيض" data-en="White">أبيض</option>
         <option value="بنفسجي" data-ar="بنفسجي" data-en="Purple">بنفسجي</option>
       </select>
-      <select class="specs">
+      <select class="specs" onchange="updatePrice(this, 'price2', {'أسود': 39000, 'أبيض': 39500, 'بنفسجي': 40000})">
         <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
         <option value="6GB/128GB">6GB / 128GB</option>
         <option value="8GB/256GB">8GB / 256GB</option>
@@ -121,15 +151,22 @@
 
     <!-- iPhone 14 Plus -->
     <div class="phone">
-      <img src="14-red-1662901725.jpg">
-      <h2 data-ar="آيفون 14 بلس" data-en="iPhone 14 Plus">iPhone 14 Plus</h2>
+      <img src="14-red-1662901725.jpg" alt="iPhone 14 Plus">
+      <h2>
+        <a href="product.html?model=iPhone%2014%20Plus"
+           data-ar="آيفون 14 بلس"
+           data-en="iPhone 14 Plus"
+           style="text-decoration: none; color: inherit;">
+          iPhone 14 Plus
+        </a>
+      </h2>
       <select class="color-select" onchange="updatePrice(this, 'price3', {'أخضر': 42000, 'أزرق': 42500, 'ذهبي': 43500})">
         <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
         <option value="أخضر" data-ar="أخضر" data-en="Green">أخضر</option>
         <option value="أزرق" data-ar="أزرق" data-en="Blue">أزرق</option>
         <option value="ذهبي" data-ar="ذهبي" data-en="Gold">ذهبي</option>
       </select>
-      <select class="specs">
+      <select class="specs" onchange="updatePrice(this, 'price3', {'أخضر': 42000, 'أزرق': 42500, 'ذهبي': 43500})">
         <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
         <option value="6GB/128GB">6GB / 128GB</option>
         <option value="8GB/256GB">8GB / 256GB</option>
@@ -143,14 +180,21 @@
   <div class="phone-container">
   <div class="phone">
     <img src="iphone-15-pro-natural_natural_titanium_5.jpg" alt="iPhone 15 Pro Max">
-    <h2 data-ar="آيفون 15 برو ماكس" data-en="iPhone 15 Pro Max">iPhone 15 Pro Max</h2>
+    <h2>
+      <a href="product.html?model=iPhone%2015%20Pro%20Max"
+         data-ar="آيفون 15 برو ماكس"
+         data-en="iPhone 15 Pro Max"
+         style="text-decoration: none; color: inherit;">
+        iPhone 15 Pro Max
+      </a>
+    </h2>
     <select class="color-select" onchange="updatePrice(this, 'price4', {'ذهبي': 55000, 'فضي': 56000, 'أسود': 57000})">
       <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
       <option value="ذهبي" data-ar="ذهبي" data-en="Gold">ذهبي</option>
       <option value="فضي" data-ar="فضي" data-en="Silver">فضي</option>
       <option value="أسود" data-ar="أسود" data-en="Black">أسود</option>
     </select>
-    <select class="specs">
+    <select class="specs" onchange="updatePrice(this, 'price4', {'ذهبي': 55000, 'فضي': 56000, 'أسود': 57000})">
       <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
       <option value="8GB/256GB">8GB / 256GB</option>
       <option value="12GB/512GB">12GB / 512GB</option>
@@ -161,14 +205,21 @@
 
   <div class="phone">
     <img src="iphone-16-pro-max-black.jpg" alt="iPhone 16">
-    <h2 data-ar="آيفون 16" data-en="iPhone 16">iPhone 16</h2>
+    <h2>
+      <a href="product.html?model=iPhone%2016"
+         data-ar="آيفون 16"
+         data-en="iPhone 16"
+         style="text-decoration: none; color: inherit;">
+        iPhone 16
+      </a>
+    </h2>
     <select class="color-select" onchange="updatePrice(this, 'price5', {'أزرق': 60000, 'أخضر': 61000, 'رمادي': 62000})">
       <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
       <option value="أزرق" data-ar="أزرق" data-en="Blue">أزرق</option>
       <option value="أخضر" data-ar="أخضر" data-en="Green">أخضر</option>
       <option value="رمادي" data-ar="رمادي" data-en="Gray">رمادي</option>
     </select>
-    <select class="specs">
+    <select class="specs" onchange="updatePrice(this, 'price5', {'أزرق': 60000, 'أخضر': 61000, 'رمادي': 62000})">
       <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
       <option value="8GB/256GB">8GB / 256GB</option>
       <option value="12GB/512GB">12GB / 512GB</option>
@@ -179,14 +230,21 @@
 
   <div class="phone">
     <img src="iPhone_16_Pink_PDP_Image_Position_1__en-WW.jpg" alt="iPhone 16 Pro">
-    <h2 data-ar="آيفون 16 برو" data-en="iPhone 16 Pro">iPhone 16 Pro</h2>
+    <h2>
+      <a href="product.html?model=iPhone%2016%20Pro"
+         data-ar="آيفون 16 برو"
+         data-en="iPhone 16 Pro"
+         style="text-decoration: none; color: inherit;">
+        iPhone 16 Pro
+      </a>
+    </h2>
     <select class="color-select" onchange="updatePrice(this, 'price6', {'فضي': 65000, 'ذهبي': 66000, 'أسود': 67000})">
       <option disabled selected value="" data-ar="اختر اللون" data-en="Choose Color">اختر اللون</option>
       <option value="فضي" data-ar="فضي" data-en="Silver">فضي</option>
       <option value="ذهبي" data-ar="ذهبي" data-en="Gold">ذهبي</option>
       <option value="أسود" data-ar="أسود" data-en="Black">أسود</option>
     </select>
-    <select class="specs">
+    <select class="specs" onchange="updatePrice(this, 'price6', {'فضي': 65000, 'ذهبي': 66000, 'أسود': 67000})">
       <option disabled selected value="" data-ar="اختر الرام والمساحة" data-en="Choose RAM and Storage">اختر الرام والمساحة</option>
       <option value="12GB/512GB">12GB / 512GB</option>
       <option value="16GB/1TB">16GB / 1TB</option>
@@ -194,132 +252,353 @@
     <div id="price6" class="price" data-ar="السعر: -" data-en="Price: -">السعر: -</div>
     <button onclick="buyNow('iPhone 16 Pro')" data-ar="شراء الآن" data-en="Buy Now">شراء الآن</button>
   </div>
-  </div>
   
+  
+    <button id="cart-button" onclick="toggleCart()" style="position: fixed; top: 20px; left: 30px; z-index: 999; background-color: #0071e3; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+      🛒 <span data-ar="السلة" data-en="Cart">السلة</span> (<span id="cart-count">0</span>)
+    </button>
+    
+  <div id="cart" style="display:none; position:fixed; top:70px; left:20px; background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(168, 16, 16, 0.2); max-width:300px; z-index: 999;">
+    <h3> 🛒 <span data-ar="سلة المشتريات" data-en="Shopping Cart">سلة المشتريات</span></h3>
+    <ul id="cart-items"></ul>
+    <p><strong><span data-ar="الإجمالي:" data-en="Total:">الإجمالي:</span> </strong><span id="cart-total">0</span> <span data-ar="جنيه" data-en="EGP">جنيه</span></p>
+    <button onclick="window.location.href='checkout.html'">
+      <span data-ar="اتمام الشراء" data-en="Checkout">اتمام الشراء</span>
+    </button>
+      </div>
   
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  // Existing disabling buttons...
+  // ——
+  // ثم:
+  const saved = JSON.parse(localStorage.getItem('cartItems')) || [];
+  cart.items = saved;
+  cart.updateCartUI();
+});
+
     // Add prices for new models
     const additionalPrices = {
-      'iPhone 15 Pro Max': {
-        'ذهبي': {
-          '8GB/256GB': 55000,
-          '12GB/512GB': 60000
-        },
-        'فضي': {
-          '8GB/256GB': 56000,
-          '12GB/512GB': 61000
-        },
-        'أسود': {
-          '8GB/256GB': 57000,
-          '12GB/512GB': 62000
-        }
-      },
-      'iPhone 16': {
-        'أزرق': {
-          '8GB/256GB': 60000,
-          '12GB/512GB': 65000
-        },
-        'أخضر': {
-          '8GB/256GB': 61000,
-          '12GB/512GB': 66000
-        },
-        'رمادي': {
-          '8GB/256GB': 62000,
-          '12GB/512GB': 67000
-        }
-      },
-      'iPhone 16 Pro': {
-        'فضي': {
-          '12GB/512GB': 65000,
-          '16GB/1TB': 70000
-        },
-        'ذهبي': {
-          '12GB/512GB': 66000,
-          '16GB/1TB': 71000
-        },
-        'أسود': {
-          '12GB/512GB': 67000,
-          '16GB/1TB': 72000
-        }
-      }
-    };
+  'iPhone 15': {
+    'أسود': {
+      '6GB/128GB': 43000,
+      '8GB/256GB': 45000
+    },
+    'أزرق': {
+      '6GB/128GB': 44000,
+      '8GB/256GB': 46000
+    },
+    'أحمر': {
+      '6GB/128GB': 45000,
+      '8GB/256GB': 47000
+    }
+  },
+  'iPhone 14': {
+    'أسود': {
+      '6GB/128GB': 39000,
+      '8GB/256GB': 41000
+    },
+    'أبيض': {
+      '6GB/128GB': 39500,
+      '8GB/256GB': 41500
+    },
+    'بنفسجي': {
+      '6GB/128GB': 40000,
+      '8GB/256GB': 42000
+    }
+  },
+  'iPhone 14 Plus': {
+    'أخضر': {
+      '6GB/128GB': 42000,
+      '8GB/256GB': 44000
+    },
+    'أزرق': {
+      '6GB/128GB': 42500,
+      '8GB/256GB': 44500
+    },
+    'ذهبي': {
+      '6GB/128GB': 43500,
+      '8GB/256GB': 45500
+    }
+  },
+  'iPhone 15 Pro Max': {
+    'ذهبي': {
+      '8GB/256GB': 55000,
+      '12GB/512GB': 57000
+    },
+    'فضي': {
+      '8GB/256GB': 56000,
+      '12GB/512GB': 58000
+    },
+    'أسود': {
+      '8GB/256GB': 57000,
+      '12GB/512GB': 59000
+    }
+  },
+  'iPhone 16': {
+    'أزرق': {
+      '8GB/256GB': 60000,
+      '12GB/512GB': 62000
+    },
+    'أخضر': {
+      '8GB/256GB': 61000,
+      '12GB/512GB': 63000
+    },
+    'رمادي': {
+      '8GB/256GB': 62000,
+      '12GB/512GB': 64000
+    }
+  },
+  'iPhone 16 Pro': {
+    'فضي': {
+      '12GB/512GB': 65000,
+      '16GB/1TB': 67000
+    },
+    'ذهبي': {
+      '12GB/512GB': 66000,
+      '16GB/1TB': 68000
+    },
+    'أسود': {
+      '12GB/512GB': 67000,
+      '16GB/1TB': 69000
+    }
+  }
+};
 
-    // Merge additionalPrices into existing prices in buyNow function
-    const originalBuyNow = buyNow;
-    buyNow = function(model) {
-      const parent = event.target.parentElement;
-      const color = parent.querySelector(".color-select").value;
-      const specs = parent.querySelector(".specs").value;
-
-      const prices = {
-        'iPhone 15': {
-          'أسود': {
-            '6GB/128GB': 43000,
-            '8GB/256GB': 47000
-          },
-          'أزرق': {
-            '6GB/128GB': 44000,
-            '8GB/256GB': 48000
-          }
-        }
-        // كمل لباقي الموديلات
-      };
-
-      // Merge additionalPrices
-      for (const modelName in additionalPrices) {
-        prices[modelName] = additionalPrices[modelName];
-      }
-
-      if (!color || !specs) {
-        alert(document.documentElement.lang === 'ar' ? "من فضلك اختر اللون والمواصفات" : "Please choose color and specs");
-        return;
-      }
-
-      const price = prices[model][color][specs];
-
-      const url = `checkout.html?model=${encodeURIComponent(model)}&color=${encodeURIComponent(color)}&specs=${encodeURIComponent(specs)}&price=${price}`;
-      window.location.href = url;
-    };
   </script>
-  
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <!-- Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 
   <script>
-    function updatePrice(selectElement, priceId, prices) {
-      const selectedColor = selectElement.value;
-      const price = prices[selectedColor];
-      document.getElementById(priceId).textContent = (document.documentElement.lang === 'ar' ? "السعر: " : "Price: ") + price + (document.documentElement.lang === 'ar' ? " جنيه" : " EGP");
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBswHiY9SZQGdsiEX6BpPYoZOrc-dJi5rM",
+      authDomain: "picknclick-3e1c8.firebaseapp.com",
+      projectId: "picknclick-3e1c8",
+      storageBucket: "picknclick-3e1c8.appspot.com",
+      messagingSenderId: "66839865979",
+      appId: "1:66839865979:web:53db8779abf7ea03e5d0de",
+      measurementId: "G-RHJ96QLZTK"
+    };
+
+    // Initialize Firebase using compat SDK
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
+    // Check auth state and update UI
+    auth.onAuthStateChanged(user => {
+  const langToggle = document.querySelector('.lang-toggle');
+  if (user) {
+    // User is signed in
+    if (!document.getElementById('user-info')) {
+      const userInfo = document.createElement('div');
+      userInfo.id = 'user-info';
+      userInfo.style.position = 'fixed';
+      userInfo.style.top = '20px';
+      userInfo.style.right = '20px';
+      userInfo.style.backgroundColor = '#0071e3';
+      userInfo.style.color = 'white';
+      userInfo.style.padding = '10px 15px';
+      userInfo.style.borderRadius = '8px';
+      userInfo.style.cursor = 'pointer';
+      userInfo.title = 'تسجيل الخروج';
+      userInfo.textContent = user.email;
+      userInfo.onclick = () => {
+        auth.signOut();
+      };
+      document.body.appendChild(userInfo);
     }
+  } else {
+    // User is signed out
+    const userInfo = document.getElementById('user-info');
+    if (userInfo) {
+      userInfo.remove();
+    }
+    window.location.href = "login.html";
+  }
+});
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        // إذا لم يكن مسجلاً الدخول، ارجع به لصفحة التسجيل
+        window.location.href = "login.html";
+      }
+    });
+
+    // Implement buyNow function to add item to cart
+    const cart = {
+      items: [],
+      addItem(item) {
+        this.items.push(item);
+        this.updateCartUI();
+      },
+      updateCartUI() {
+        const cartItemsElem = document.getElementById('cart-items');
+        const cartCountElem = document.getElementById('cart-count');
+        const cartTotalElem = document.getElementById('cart-total');
+        cartItemsElem.innerHTML = '';
+        let total = 0;
+        this.items.forEach((item, index) => {
+          const li = document.createElement('li');
+          li.textContent = `${item.model} - ${item.color} - ${item.specs} - ${item.price} ${document.documentElement.lang === 'ar' ? 'جنيه' : 'EGP'}`;
+          // Add remove button for each item
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = document.documentElement.lang === 'ar' ? 'حذف' : 'Remove';
+          removeBtn.style.marginLeft = '10px';
+          removeBtn.onclick = () => {
+            this.items.splice(index, 1);
+            this.updateCartUI();
+          };
+          li.appendChild(removeBtn);
+          cartItemsElem.appendChild(li);
+          total += item.price;
+        });
+        cartCountElem.textContent = this.items.length;
+        cartTotalElem.textContent = total;
+      },
+      clear() {
+        this.items = [];
+        this.updateCartUI();
+      }
+    };
+// تفعيل/تعطيل أزرار الشراء عند التحميل
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.phone button[onclick^="buyNow"]').forEach(btn => {
+    btn.disabled = true;
+  });
+});
 
     function buyNow(model) {
-      const parent = event.target.parentElement;
-      const color = parent.querySelector(".color-select").value;
-      const specs = parent.querySelector(".specs").value;
-
-      const prices = {
-        'iPhone 15': {
-          'أسود': {
-            '6GB/128GB': 43000,
-            '8GB/256GB': 47000
-          },
-          'أزرق': {
-            '6GB/128GB': 44000,
-            '8GB/256GB': 48000
-          }
-        }
-        // كمل لباقي الموديلات
-      };
-
-      if (!color || !specs) {
-        alert(document.documentElement.lang === 'ar' ? "من فضلك اختر اللون والمواصفات" : "Please choose color and specs");
+      if (!auth.currentUser) {
+        alert('يرجى تسجيل الدخول أولاً للشراء.');
+        window.location.href = 'login.html';
         return;
       }
-
-      const price = prices[model][color][specs];
-
-      const url = `checkout.html?model=${encodeURIComponent(model)}&color=${encodeURIComponent(color)}&specs=${encodeURIComponent(specs)}&price=${price}`;
-      window.location.href = url;
+      // Find the phone div for the model
+      const phones = document.querySelectorAll('.phone');
+      let phoneDiv = null;
+      phones.forEach(phone => {
+        const h2 = phone.querySelector('h2');
+        const h2Text = h2 ? h2.textContent.trim() : '';
+        const aText = h2 && h2.querySelector('a') ? h2.querySelector('a').textContent.trim() : '';
+        if (h2Text === model || aText === model) {
+          phoneDiv = phone;
+        }
+      });
+      if (!phoneDiv) {
+        alert(document.documentElement.lang === 'ar' ? 'لم يتم العثور على الهاتف.' : 'Phone not found.');
+        return;
+      }
+      const colorSelect = phoneDiv.querySelector('.color-select');
+      const specsSelect = phoneDiv.querySelector('.specs');
+      const priceDiv = phoneDiv.querySelector('.price');
+      const color = colorSelect.value;
+      const specs = specsSelect.value;
+      const price = priceDiv.dataset.price;
+      if (!color) {
+        alert(document.documentElement.lang === 'ar' ? 'يرجى اختيار اللون.' : 'Please select a color.');
+        return;
+      }
+      if (!specs) {
+        alert(document.documentElement.lang === 'ar' ? 'يرجى اختيار الرام والمساحة.' : 'Please select RAM and Storage.');
+        return;
+      }
+      if (!price) {
+        alert(document.documentElement.lang === 'ar' ? 'السعر غير متوفر.' : 'Price not available.');
+        return;
+      }
+      // Get price from data attribute instead of parsing text
+      const item = { model, color, specs, price: parseInt(price) };
+      // Add item to cart
+      cart.addItem(item);
+      addToCart(item);
     }
 
+    function updatePrice(selectElem, priceId) {
+  const phoneDiv = selectElem.closest('.phone');
+  const colorSelect = phoneDiv.querySelector('.color-select');
+  const specsSelect = phoneDiv.querySelector('.specs');
+  const color = colorSelect.value;
+  const specs = specsSelect.value;
+  const priceDiv = document.getElementById(priceId);
+  
+  // احصل على النموذج من عنوان الهاتف
+  const model = phoneDiv.querySelector('h2').textContent.trim();
+  
+  if (color && specs && additionalPrices[model] && additionalPrices[model][color] && additionalPrices[model][color][specs]) {
+    const price = additionalPrices[model][color][specs];
+    priceDiv.textContent = (document.documentElement.lang === 'ar' ? 'السعر: ' : 'Price: ') + price;
+    priceDiv.dataset.price = price;
+    // تفعيل زر الشراء
+    const buyBtn = phoneDiv.querySelector('button[onclick^="buyNow"]');
+    if (buyBtn) buyBtn.disabled = false;
+  } else {
+    priceDiv.textContent = (document.documentElement.lang === 'ar' ? 'السعر: -' : 'Price: -');
+    priceDiv.dataset.price = '';
+    // تعطيل زر الشراء
+    const buyBtn = phoneDiv.querySelector('button[onclick^="buyNow"]');
+    if (buyBtn) buyBtn.disabled = true;
+  }
+}
+
+    function toggleCart() {
+      console.log('toggleCart called');
+      const cart = document.getElementById('cart');
+      if (!cart) {
+        console.error('Cart element not found');
+        return;
+      }
+      console.log('Current cart display:', cart.style.display);
+      if (cart.style.display === 'none' || cart.style.display === '') {
+        cart.style.display = 'block';
+        console.log('Cart shown');
+      } else {
+        cart.style.display = 'none';
+        console.log('Cart hidden');
+      }
+    }
+
+    // في دالة buyNow أو عند الضغط على زر اتمام الشراء
+function proceedToCheckout() {
+  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+  if (cartItems.length === 0) {
+    alert('السلة فارغة!');
+    return;
+  }
+  window.location.href = 'checkout.html';
+}
+
+  function getCartItemCount() {
+    // مثال: جلب عدد العناصر من localStorage أو من عنصر في الصفحة
+    const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+    return cart.length;
+    
+  }
+
+  function addToCart(product) {
+  let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+  cart.push(product);
+  localStorage.setItem('cartItems', JSON.stringify(cart));
+}
+
+
+  </script>
+
+<button id="logout-btn" style="position: fixed; bottom: 20px; left: 30px; background: #ff3b30; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
+  تسجيل الخروج
+</button>
+
+<script>
+  document.getElementById('logout-btn').onclick = function() {
+    firebase.auth().signOut().then(() => {
+      window.location.href = "login.html";
+    });
+  };
+</script>
+  <script>
     function toggleLang() {
       const isArabic = document.documentElement.lang === 'ar';
       document.documentElement.lang = isArabic ? 'en' : 'ar';

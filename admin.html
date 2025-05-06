@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>لوحة إدارة الطلبات</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+      direction: rtl;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: right;
+      vertical-align: top;
+    }
+    th {
+      background-color: #0071e3;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f3;
+    }
+    .items-list {
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+    .items-list p {
+      margin: 4px 0;
+    }
+    .loading {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 50px;
+    }
+    .logout-btn {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      float: left;
+      margin-bottom: 20px;
+    }
+    .logout-btn:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <button class="logout-btn" id="logoutBtn">تسجيل الخروج</button>
+  <h1>لوحة إدارة الطلبات</h1>
+  <div id="loading" class="loading">جاري تحميل الطلبات...</div>
+  <table id="ordersTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>البريد الإلكتروني</th>
+        <th>الاسم</th>
+        <th>رقم الهاتف</th>
+        <th>العنوان</th>
+        <th>العناصر</th>
+        <th>المجموع الكلي (جنيه)</th>
+        <th>تاريخ الطلب</th>
+      </tr>
+    </thead>
+    <tbody id="ordersBody"></tbody>
+  </table>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBswHiY9SZQGdsiEX6BpPYoZOrc-dJi5rM",
+      authDomain: "picknclick-3e1c8.firebaseapp.com",
+      projectId: "picknclick-3e1c8",
+      storageBucket: "picknclick-3e1c8.appspot.com",
+      messagingSenderId: "66839865979",
+      appId: "1:66839865979:web:53db8779abf7ea03e5d0de",
+      measurementId: "G-RHJ96QLZTK"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const ordersTable = document.getElementById('ordersTable');
+    const ordersBody = document.getElementById('ordersBody');
+    const loadingDiv = document.getElementById('loading');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    logoutBtn.addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    });
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // TODO: Optionally check if user is admin by custom claims or Firestore role field
+
+      db.collection('orders').orderBy('timestamp', 'desc').get()
+        .then(snapshot => {
+          loadingDiv.style.display = 'none';
+          ordersTable.style.display = 'table';
+
+          if (snapshot.empty) {
+            ordersBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد طلبات حتى الآن.</td></tr>';
+            return;
+          }
+
+          snapshot.forEach(doc => {
+            const order = doc.data();
+            const date = order.timestamp ? order.timestamp.toDate().toLocaleString('ar-EG') : 'غير متوفر';
+
+            const itemsHtml = order.items.map(item => `
+              <p><strong>النموذج:</strong> ${item.model}<br/>
+              <strong>اللون:</strong> ${item.color}<br/>
+              <strong>المواصفات:</strong> ${item.specs}<br/>
+              <strong>السعر:</strong> ${item.price} جنيه</p>
+            `).join('');
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${order.email || ''}</td>
+              <td>${order.name || ''}</td>
+              <td>${order.phone || ''}</td>
+              <td>${order.address || ''}</td>
+              <td class="items-list">${itemsHtml}</td>
+              <td>${order.total || 0}</td>
+              <td>${date}</td>
+            `;
+            ordersBody.appendChild(row);
+          });
+        })
+        .catch(error => {
+          loadingDiv.textContent = 'حدث خطأ أثناء تحميل الطلبات: ' + error.message;
+        });
+    });
+  </script>
+</body>
+</html>

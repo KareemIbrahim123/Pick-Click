@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تفاصيل المنتج</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      background-color: #f5f5f7;
+      margin: 0;
+      padding: 20px;
+      color: #1d1d1f;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .price {
+      font-size: 20px;
+      font-weight: bold;
+      color: #0071e3;
+      margin: 15px 0;
+    }
+    button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 10%;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="model-name"></h1>
+    <img id="model-image" src="" alt="Phone Image" />
+    <select id="color-select">
+      <option disabled selected value="">اختر اللون</option>
+    </select>
+    <select id="specs-select">
+      <option disabled selected value="">اختر الرام والمساحة</option>
+    </select>
+    <div class="price" id="price-display">السعر: -</div>
+    <button id="buy-now-btn" disabled>شراء الآن</button>
+  </div>
+
+  <script>
+    // Data for phones (images must match those in index.html)
+    const phoneData = {
+      "iPhone 15": {
+        image: "712i-Bxl8qL.jpg",
+        colors: ["أسود", "أزرق", "أحمر"],
+        specs: ["6GB/128GB", "8GB/256GB"],
+        prices: {
+          "أسود": { "6GB/128GB": 43000, "8GB/256GB": 45000 },
+          "أزرق": { "6GB/128GB": 44000, "8GB/256GB": 46000 },
+          "أحمر": { "6GB/128GB": 45000, "8GB/256GB": 47000 }
+        }
+      },
+      "iPhone 14": {
+        image: "iphone_14_blue-5_3.jpg",
+        colors: ["أسود", "أبيض", "بنفسجي"],
+        specs: ["6GB/128GB", "8GB/256GB"],
+        prices: {
+          "أسود": { "6GB/128GB": 39000, "8GB/256GB": 41000 },
+          "أبيض": { "6GB/128GB": 39500, "8GB/256GB": 41500 },
+          "بنفسجي": { "6GB/128GB": 40000, "8GB/256GB": 42000 }
+        }
+      },
+      "iPhone 14 Plus": {
+        image: "14-red-1662901725.jpg",
+        colors: ["أخضر", "أزرق", "ذهبي"],
+        specs: ["6GB/128GB", "8GB/256GB"],
+        prices: {
+          "أخضر": { "6GB/128GB": 42000, "8GB/256GB": 44000 },
+          "أزرق": { "6GB/128GB": 42500, "8GB/256GB": 44500 },
+          "ذهبي": { "6GB/128GB": 43500, "8GB/256GB": 45500 }
+        }
+      },
+      "iPhone 15 Pro Max": {
+        image: "iphone-15-pro-natural_natural_titanium_5.jpg",
+        colors: ["ذهبي", "فضي", "أسود"],
+        specs: ["8GB/256GB", "12GB/512GB"],
+        prices: {
+          "ذهبي": { "8GB/256GB": 55000, "12GB/512GB": 57000 },
+          "فضي": { "8GB/256GB": 56000, "12GB/512GB": 58000 },
+          "أسود": { "8GB/256GB": 57000, "12GB/512GB": 59000 }
+        }
+      },
+      "iPhone 16": {
+        image: "iphone-16-pro-max-black.jpg",
+        colors: ["أزرق", "أخضر", "رمادي"],
+        specs: ["8GB/256GB", "12GB/512GB"],
+        prices: {
+          "أزرق": { "8GB/256GB": 60000, "12GB/512GB": 62000 },
+          "أخضر": { "8GB/256GB": 61000, "12GB/512GB": 63000 },
+          "رمادي": { "8GB/256GB": 62000, "12GB/512GB": 64000 }
+        }
+      },
+      "iPhone 16 Pro": {
+        image: "iPhone_16_Pink_PDP_Image_Position_1__en-WW.jpg",
+        colors: ["فضي", "ذهبي", "أسود"],
+        specs: ["12GB/512GB", "16GB/1TB"],
+        prices: {
+          "فضي": { "12GB/512GB": 65000, "16GB/1TB": 67000 },
+          "ذهبي": { "12GB/512GB": 66000, "16GB/1TB": 68000 },
+          "أسود": { "12GB/512GB": 67000, "16GB/1TB": 69000 }
+        }
+      }
+    };
+
+    // Get model from URL query
+    const urlParams = new URLSearchParams(window.location.search);
+    const model = urlParams.get('model');
+
+    const modelNameElem = document.getElementById('model-name');
+    const modelImageElem = document.getElementById('model-image');
+    const colorSelect = document.getElementById('color-select');
+    const specsSelect = document.getElementById('specs-select');
+    const priceDisplay = document.getElementById('price-display');
+    const buyNowBtn = document.getElementById('buy-now-btn');
+
+    if (!model || !phoneData[model]) {
+      modelNameElem.textContent = "المنتج غير موجود";
+      buyNowBtn.disabled = true;
+    } else {
+      const phone = phoneData[model];
+      modelNameElem.textContent = model;
+      modelImageElem.src = phone.image;
+      modelImageElem.alt = model;
+
+      // Populate colors
+      phone.colors.forEach(color => {
+        const option = document.createElement('option');
+        option.value = color;
+        option.textContent = color;
+        colorSelect.appendChild(option);
+      });
+
+      // Populate specs
+      phone.specs.forEach(spec => {
+        const option = document.createElement('option');
+        option.value = spec;
+        option.textContent = spec;
+        specsSelect.appendChild(option);
+      });
+
+      function updatePrice() {
+        const selectedColor = colorSelect.value;
+        const selectedSpecs = specsSelect.value;
+        if (selectedColor && selectedSpecs) {
+          const price = phone.prices[selectedColor][selectedSpecs];
+          priceDisplay.textContent = "السعر: " + price + " جنيه";
+          buyNowBtn.disabled = false;
+        } else {
+          priceDisplay.textContent = "السعر: -";
+          buyNowBtn.disabled = true;
+        }
+      }
+
+      colorSelect.addEventListener('change', updatePrice);
+      specsSelect.addEventListener('change', updatePrice);
+
+      buyNowBtn.addEventListener('click', () => {
+        if (!auth.currentUser) {
+          alert('يرجى تسجيل الدخول أولاً للشراء.');
+          window.location.href = 'login.html';
+          return;
+        }
+        const item = {
+          model: model,
+          color: colorSelect.value,
+          specs: specsSelect.value,
+          price: phone.prices[colorSelect.value][specsSelect.value]
+        };
+        // Add to cart logic
+        let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+        cart.push(item);
+        localStorage.setItem('cartItems', JSON.stringify(cart));
+        alert('تم إضافة المنتج إلى السلة.');
+      });
+    }
+  </script>
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <!-- Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+  <button id="cart-button" style="position: fixed; top: 20px; left: 30px; z-index: 999; background-color: #0071e3; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+    🛒 <span data-ar="السلة" data-en="Cart">السلة</span> (<span id="cart-count">0</span>)
+  </button>
+
+  <div id="cart" style="display:none; position:fixed; top:70px; left:20px; background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(168, 16, 16, 0.2); max-width:300px; z-index: 999;">
+    <h3> 🛒 <span data-ar="سلة المشتريات" data-en="Shopping Cart">سلة المشتريات</span></h3>
+    <ul id="cart-items"></ul>
+    <p><strong><span data-ar="الإجمالي:" data-en="Total:">الإجمالي:</span> </strong><span id="cart-total">0</span> <span data-ar="جنيه" data-en="EGP">جنيه</span></p>
+    <button onclick="window.location.href='checkout.html'">
+      <span data-ar="اتمام الشراء" data-en="Checkout">اتمام الشراء</span>
+    </button>
+  </div>
+
+  <button class="lang-toggle" onclick="toggleLang()" style="position: fixed; top: 20px; right: 30px; z-index: 999; background-color: #0071e3; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer;">
+    English
+  </button>
+
+  <button id="logout-btn" style="position: fixed; bottom: 20px; left: 30px; background: #ff3b30; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
+    تسجيل الخروج
+  </button>
+
+  <script>
+    // Cart object and functions
+    const cart = {
+      items: [],
+      addItem(item) {
+        this.items.push(item);
+        this.updateCartUI();
+      },
+      updateCartUI() {
+        const cartItemsElem = document.getElementById('cart-items');
+        const cartCountElem = document.getElementById('cart-count');
+        const cartTotalElem = document.getElementById('cart-total');
+        cartItemsElem.innerHTML = '';
+        let total = 0;
+        this.items.forEach((item, index) => {
+          const li = document.createElement('li');
+          li.textContent = `${item.model} - ${item.color} - ${item.specs} - ${item.price} ${document.documentElement.lang === 'ar' ? 'جنيه' : 'EGP'}`;
+          // Add remove button for each item
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = document.documentElement.lang === 'ar' ? 'حذف' : 'Remove';
+          removeBtn.style.marginLeft = '10px';
+          removeBtn.onclick = () => {
+            this.items.splice(index, 1);
+            this.updateCartUI();
+          };
+          li.appendChild(removeBtn);
+          cartItemsElem.appendChild(li);
+          total += item.price;
+        });
+        cartCountElem.textContent = this.items.length;
+        cartTotalElem.textContent = total;
+      },
+      clear() {
+        this.items = [];
+        this.updateCartUI();
+      }
+    };
+
+    // Load cart from localStorage on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const saved = JSON.parse(localStorage.getItem('cartItems')) || [];
+      cart.items = saved;
+      cart.updateCartUI();
+    });
+
+    // Toggle cart visibility
+    function toggleCart() {
+      const cartElem = document.getElementById('cart');
+      if (!cartElem) return;
+      if (cartElem.style.display === 'none' || cartElem.style.display === '') {
+        cartElem.style.display = 'block';
+      } else {
+        cartElem.style.display = 'none';
+      }
+    }
+
+    document.getElementById('cart-button').addEventListener('click', toggleCart);
+
+    // Language toggle function
+    function toggleLang() {
+      const isArabic = document.documentElement.lang === 'ar';
+      document.documentElement.lang = isArabic ? 'en' : 'ar';
+      document.documentElement.dir = isArabic ? 'ltr' : 'rtl';
+      document.querySelector('.lang-toggle').textContent = isArabic ? 'عربي' : 'English';
+      document.querySelectorAll('[data-ar]').forEach(el => {
+        el.textContent = isArabic ? el.dataset.en : el.dataset.ar;
+      });
+      cart.updateCartUI();
+    }
+
+    // Logout button functionality
+    document.getElementById('logout-btn').onclick = function() {
+      auth.signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    };
+  </script>

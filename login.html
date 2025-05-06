@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تسجيل الدخول والتسجيل - Pick & Click</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      background-color: #ccc;
+      margin: 0;
+      padding: 20px;
+      color: #1d1d1f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .auth-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+    .toggle-link {
+      margin-top: 15px;
+      cursor: pointer;
+      color: #0071e3;
+      text-decoration: underline;
+    }
+    .error-message {
+      color: red;
+      margin-top: 10px;
+    }
+    .register-fields {
+      display: none;
+    }
+    .google-btn {
+      background-color: #ffffff;
+      color: #757575;
+      border: 1px solid #ddd;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .google-btn:hover {
+      background-color: #f7f7f7;
+    }
+    .google-icon {
+      width: 20px;
+      height: 20px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h2 id="form-title">تسجيل الدخول</h2>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" required />
+    <input type="password" id="password" placeholder="كلمة المرور" required />
+    <div id="register-fields" class="register-fields">
+      <input type="password" id="confirm-password" placeholder="تأكيد كلمة المرور" />
+      <input type="text" id="full-name" placeholder="الاسم الكامل" />
+      <input type="tel" id="phone" placeholder="رقم الهاتف" />
+      <input type="text" id="address" placeholder="العنوان" />
+    </div>
+    <button id="auth-button">تسجيل الدخول</button>
+    <div class="toggle-link" id="toggle-form">ليس لديك حساب؟ سجل الآن</div>
+    <button id="google-signin" class="google-btn">
+      <span>تسجيل الدخول بواسطة Google</span>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="google-icon" alt="Google logo" />
+    </button>
+    <div class="error-message" id="error-message"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBswHiY9SZQGdsiEX6BpPYoZOrc-dJi5rM",
+      authDomain: "picknclick-3e1c8.firebaseapp.com",
+      projectId: "picknclick-3e1c8",
+      storageBucket: "picknclick-3e1c8.firebasestorage.app",
+      messagingSenderId: "66839865979",
+      appId: "1:66839865979:web:53db8779abf7ea03e5d0de",
+      measurementId: "G-RHJ96QLZTK"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const formTitle = document.getElementById('form-title');
+    const authButton = document.getElementById('auth-button');
+    const toggleForm = document.getElementById('toggle-form');
+    const errorMessage = document.getElementById('error-message');
+    const registerFields = document.getElementById('register-fields');
+    const googleSignInBtn = document.getElementById('google-signin');
+
+    let isLogin = true;
+
+    // Parse redirect URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect') || 'index.html';
+
+    toggleForm.addEventListener('click', () => {
+      isLogin = !isLogin;
+      if (isLogin) {
+        formTitle.textContent = 'تسجيل الدخول';
+        authButton.textContent = 'تسجيل الدخول';
+        toggleForm.textContent = 'ليس لديك حساب؟ سجل الآن';
+        registerFields.style.display = 'none';
+      } else {
+        formTitle.textContent = 'إنشاء حساب جديد';
+        authButton.textContent = 'تسجيل';
+        toggleForm.textContent = 'لديك حساب؟ تسجيل الدخول';
+        registerFields.style.display = 'block';
+      }
+      errorMessage.textContent = '';
+    });
+
+    authButton.addEventListener('click', () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      errorMessage.textContent = '';
+
+      if (isLogin) {
+        auth.signInWithEmailAndPassword(email, password)
+          .then(() => {
+            window.location.href = redirectUrl;
+          })
+          .catch(error => {
+            errorMessage.textContent = error.message;
+          });
+      } else {
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const fullName = document.getElementById('full-name').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+
+        if (password !== confirmPassword) {
+          errorMessage.textContent = 'كلمة المرور غير متطابقة';
+          return;
+        }
+
+        if (!fullName || !phone) {
+          errorMessage.textContent = 'الاسم الكامل ورقم الهاتف مطلوبان';
+          return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+          .then((userCredential) => {
+            return db.collection('users').doc(userCredential.user.uid).set({
+              fullName: fullName,
+              email: email,
+              phone: phone,
+              address: address,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          })
+          .then(() => {
+            window.location.href = redirectUrl;
+          })
+          .catch(error => {
+            errorMessage.textContent = error.message;
+          });
+      }
+    });
+
+    googleSignInBtn.addEventListener('click', () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+
+      firebase.auth()
+        .signInWithPopup(provider)
+        .then((result) => {
+          const user = result.user;
+          return db.collection('users').doc(user.uid).set({
+            fullName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            provider: 'google',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        })
+        .then(() => {
+          window.location.href = redirectUrl;
+        })
+        .catch((error) => {
+          console.error('Error signing in with Google:', error);
+          errorMessage.textContent = 'حدث خطأ أثناء تسجيل الدخول بواسطة Google';
+        });
+    });
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        window.location.href = redirectUrl;
+      }
+    });
+  </script>
+</body>
+</html>
