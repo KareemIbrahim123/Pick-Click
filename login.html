@@ -109,7 +109,7 @@
     <div class="toggle-link" id="toggle-form">ليس لديك حساب؟ سجل الآن</div>
     <button id="google-signin" class="google-btn">
       <span>تسجيل الدخول بواسطة Google</span>
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="google-icon" alt="Google logo" />
+      <img src="transparent-google-logo-google-logo-with-colorful-letters-on-black-1710875297222.webp" class="google-icon" alt="Google logo" />
     </button>
     <div class="error-message" id="error-message"></div>
     <div class="success-message" id="success-message"></div>
@@ -204,20 +204,25 @@
         authButton.disabled = true;
         authButton.textContent = 'جاري التسجيل...';
 
-        auth.createUserWithEmailAndPassword(email, password)
+       auth.createUserWithEmailAndPassword(email, password)
           .then((userCredential) => {
             const user = userCredential.user;
+            const userData = {
+              fullName: fullName,
+              email: email,
+              phone: phone,
+              address: address,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            // إضافة هذا السطر لعرض البيانات في الكونسول قبل الإرسال
+            console.log("البيانات اللي بيتم إرسالها إلى Firestore:", userData);
+
             // إرسال رابط التحقق
             return user.sendEmailVerification()
               .then(() => {
                 // بعد إرسال رابط التحقق، قم بتخزين بيانات المستخدم في Firestore
-                return db.collection('users').doc(user.uid).set({
-                  fullName: fullName,
-                  email: email,
-                  phone: phone,
-                  address: address,
-                  createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                return db.collection('users').doc(user.uid).set(userData);
               })
               .then(() => {
                 successMessage.textContent = 'تم إنشاء الحساب. يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب.';
