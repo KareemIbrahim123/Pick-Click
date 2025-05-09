@@ -49,6 +49,10 @@
     button:hover {
       background-color: #005bb5;
     }
+    button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
     .toggle-link {
       margin-top: 15px;
       cursor: pointer;
@@ -57,6 +61,10 @@
     }
     .error-message {
       color: red;
+      margin-top: 10px;
+    }
+    .success-message {
+      color: green;
       margin-top: 10px;
     }
     .register-fields {
@@ -104,6 +112,7 @@
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="google-icon" alt="Google logo" />
     </button>
     <div class="error-message" id="error-message"></div>
+    <div class="success-message" id="success-message"></div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -128,6 +137,7 @@
     const authButton = document.getElementById('auth-button');
     const toggleForm = document.getElementById('toggle-form');
     const errorMessage = document.getElementById('error-message');
+    const successMessage = document.getElementById('success-message'); // إضافة رسالة النجاح
     const registerFields = document.getElementById('register-fields');
     const googleSignInBtn = document.getElementById('google-signin');
 
@@ -151,17 +161,25 @@
         registerFields.style.display = 'block';
       }
       errorMessage.textContent = '';
+      successMessage.textContent = ''; // مسح رسالة النجاح عند تبديل النموذج
     });
 
     authButton.addEventListener('click', () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       errorMessage.textContent = '';
+      successMessage.textContent = ''; // مسح رسالة النجاح
 
       if (isLogin) {
         auth.signInWithEmailAndPassword(email, password)
-          .then(() => {
-            window.location.href = redirectUrl;
+          .then((userCredential) => {
+            const user = userCredential.user;
+            if (user.emailVerified) {
+              window.location.href = redirectUrl;
+            } else {
+              errorMessage.textContent = 'يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب قبل تسجيل الدخول.';
+              auth.signOut();
+            }
           })
           .catch(error => {
             errorMessage.textContent = error.message;
@@ -182,21 +200,37 @@
           return;
         }
 
+        // تعطيل الزر ومنع المستخدم من الضغط عليه مرة أخرى
+        authButton.disabled = true;
+        authButton.textContent = 'جاري التسجيل...';
+
         auth.createUserWithEmailAndPassword(email, password)
           .then((userCredential) => {
-            return db.collection('users').doc(userCredential.user.uid).set({
-              fullName: fullName,
-              email: email,
-              phone: phone,
-              address: address,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-          })
-          .then(() => {
-            window.location.href = redirectUrl;
+            const user = userCredential.user;
+            // إرسال رابط التحقق
+            return user.sendEmailVerification()
+              .then(() => {
+                // بعد إرسال رابط التحقق، قم بتخزين بيانات المستخدم في Firestore
+                return db.collection('users').doc(user.uid).set({
+                  fullName: fullName,
+                  email: email,
+                  phone: phone,
+                  address: address,
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+              })
+              .then(() => {
+                successMessage.textContent = 'تم إنشاء الحساب. يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب.';
+                auth.signOut();
+              });
           })
           .catch(error => {
             errorMessage.textContent = error.message;
+          })
+          .finally(() => {
+            // إعادة تمكين الزر بغض النظر عن النتيجة
+            authButton.disabled = false;
+            authButton.textContent = 'تسجيل';
           });
       }
     });
@@ -226,8 +260,10 @@
     });
 
     auth.onAuthStateChanged(user => {
-      if (user) {
+      if (user && user.emailVerified) {
         window.location.href = redirectUrl;
+      } else if (user) {
+        auth.signOut();
       }
     });
   </script>
