@@ -1,212 +1,201 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
-    
-  <title>تأكيد الشراء</title>
-  <style>
-    body {
-      font-family: "Helvetica Neue", sans-serif;
-      background-color: #ccc;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      background-color: white;
-      max-width: 500px;
-      margin: 50px auto;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    }
-    h2 {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    .summary {
-      margin-top: 20px;
-      background-color: #f1f1f3;
-      padding: 15px;
-      border-radius: 10px;
-    }
-    button {
-      margin-top: 25px;
-      width: 100%;
-      padding: 12px;
-      background-color: #0071e3;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #005bb5;
-    }
-    button:disabled {
-      background-color: #999;
-      cursor: not-allowed;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>تأكيد عملية الشراء</h2>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد الشراء</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", sans-serif;
+            background-color: #ccc;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 20px;
+        }
 
-    <div class="summary">
-      <h3>تفاصيل الطلب</h3>
-      <div id="order-summary"></div>
-      <p><strong>المجموع الكلي:</strong> <span id="total-price">0</span> جنيه</p>
+        .container {
+            background-color: white;
+            max-width: 95%; /* عرض أكبر على الموبايل */
+            margin: 20px auto; /* تقليل الهوامش الرأسية على الموبايل */
+            padding: 20px; /* تقليل المساحة الداخلية على الموبايل */
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px; /* تقليل حجم الخط على الموبايل */
+        }
+
+        label {
+            display: block;
+            margin-top: 10px; /* تقليل الهوامش الرأسية على الموبايل */
+            font-size: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .summary {
+            margin-top: 20px;
+            background-color: #f1f1f3;
+            padding: 10px; /* تقليل المساحة الداخلية على الموبايل */
+            border-radius: 10px;
+        }
+
+        button {
+            margin-top: 20px; /* تقليل الهوامش الرأسية على الموبايل */
+            width: 100%;
+            padding: 12px;
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        button:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>تأكيد عملية الشراء</h2>
+
+        <div class="summary">
+            <h3>تفاصيل الطلب</h3>
+            <div id="order-summary"></div>
+            <p><strong>المجموع الكلي:</strong> <span id="total-price">0</span> جنيه</p>
+        </div>
+
+        <form id="order-form">
+            <label>الاسم الكامل</label>
+            <input type="text" required id="name">
+
+            <label>رقم الهاتف</label>
+            <input type="tel" required id="phone">
+
+            <label>العنوان</label>
+            <input type="text" required id="address">
+
+            <button type="submit" id="submit-btn">تأكيد الشراء</button>
+        </form>
     </div>
 
-    <form id="order-form">
-      <label>الاسم الكامل</label>
-      <input type="text" required id="name">
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const firebaseConfig = {
+                apiKey: "AIzaSyBswHiY9SZQGdsiEX6BpPYoZOrc-dJi5rM",
+                authDomain: "picknclick-3e1c8.firebaseapp.com",
+                projectId: "picknclick-3e1c8",
+                storageBucket: "picknclick-3e1c8.appspot.com",
+                messagingSenderId: "66839865979",
+                appId: "1:66839865979:web:53db8779abf7ea03e5d0de",
+                measurementId: "G-RHJ96QLZTK"
+            };
+            firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
 
-      <label>رقم الهاتف</label>
-      <input type="tel" required id="phone">
+            const orderSummaryDiv = document.getElementById('order-summary');
+            const totalPriceSpan = document.getElementById('total-price');
+            const orderForm = document.getElementById('order-form');
+            const submitBtn = document.getElementById('submit-btn');
 
-      <label>العنوان</label>
-      <input type="text" required id="address">
+            auth.onAuthStateChanged(user => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
 
-      <button type="submit" id="submit-btn">تأكيد الشراء</button>
-    </form>
-  </div>
+                const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                let totalPrice = 0;
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+                let summaryHTML = '<ul>';
+                cartItems.forEach(item => {
+                    summaryHTML += `<li>${item.name} - ${item.color} - ${item.specs} - ${item.price} جنيه</li>`;
+                    totalPrice += item.price;
+                });
+                summaryHTML += '</ul>';
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const firebaseConfig = {
-        apiKey: "AIzaSyBswHiY9SZQGdsiEX6BpPYoZOrc-dJi5rM",
-        authDomain: "picknclick-3e1c8.firebaseapp.com",
-        projectId: "picknclick-3e1c8",
-        storageBucket: "picknclick-3e1c8.appspot.com",
-        messagingSenderId: "66839865979",
-        appId: "1:66839865979:web:53db8779abf7ea03e5d0de",
-        measurementId: "G-RHJ96QLZTK"
-      };
+                orderSummaryDiv.innerHTML = summaryHTML;
+                totalPriceSpan.textContent = totalPrice;
 
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
+                orderForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
 
-      const orderSummary = document.getElementById('order-summary');
-      const totalElement = document.getElementById('total-price');
-      const submitBtn = document.getElementById('submit-btn');
-      const orderForm = document.getElementById('order-form');
+                    const name = document.getElementById('name').value.trim();
+                    const phone = document.getElementById('phone').value.trim();
+                    const address = document.getElementById('address').value.trim();
 
-      auth.onAuthStateChanged(user => {
-        if (!user) {
-          window.location.href = "login.html";
-          return;
-        }
+                    if (!name || !phone || !address) {
+                        alert('يرجى ملء جميع الحقول المطلوبة.');
+                        return;
+                    }
 
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        let total = 0;
+                    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                    if (cartItems.length === 0) {
+                        alert('لا توجد عناصر في السلة!');
+                        return;
+                    }
 
-        if (cartItems.length === 0) {
-          orderSummary.innerHTML = '<p>السلة فارغة</p>';
-          submitBtn.disabled = true;
-          return;
-        }
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'جاري تأكيد الطلب...';
 
-        orderSummary.innerHTML = '';
-        cartItems.forEach(item => {
-          const itemElement = document.createElement('div');
-          itemElement.className = 'cart-item';
-          itemElement.innerHTML = `
-            <p><strong>النموذج:</strong> ${item.model}</p>
-            <p><strong>اللون:</strong> ${item.color}</p>
-            <p><strong>المواصفات:</strong> ${item.specs}</p>
-            <p><strong>السعر:</strong> ${item.price} جنيه</p>
-            <hr>
-          `;
-          orderSummary.appendChild(itemElement);
-          total += item.price;
+                    const orderData = {
+                        userId: user.uid,
+                        email: user.email,
+                        items: cartItems,
+                        total: cartItems.reduce((sum, item) => sum + item.price, 0),
+                        name,
+                        phone,
+                        address,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    db.collection('orders').add(orderData)
+                        .then(() => {
+                            console.log('Order confirmed successfully');
+                            alert('✅ تم تأكيد الطلب بنجاح!');
+                            localStorage.removeItem('cartItems');
+                            orderForm.reset();
+                            window.location.href = 'index.html';
+                        })
+                        .catch(error => {
+                            console.error('Error confirming order:', error);
+                            alert('حدث خطأ: ' + error.message);
+                        })
+                        .finally(() => {
+                            console.log('Order submission process finished');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'تأكيد الشراء';
+                        });
+                });
+            });
         });
 
-        totalElement.textContent = total;
-      });
-
-      orderForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const user = auth.currentUser;
-        if (!user) {
-          alert('يرجى تسجيل الدخول أولاً!');
-          window.location.href = 'login.html';
-          return;
-        }
-
-        const name = document.getElementById('name').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const address = document.getElementById('address').value.trim();
-
-        if (!name || !phone || !address) {
-          alert('يرجى ملء جميع الحقول المطلوبة.');
-          return;
-        }
-
-        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        if (cartItems.length === 0) {
-          alert('لا توجد عناصر في السلة!');
-          return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'جاري تأكيد الطلب...';
-
-        const orderData = {
-          userId: user.uid,
-          email: user.email,
-          items: cartItems,
-          total: cartItems.reduce((sum, item) => sum + item.price, 0),
-          name,
-          phone,
-          address,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        db.collection('orders').add(orderData)
-          .then(() => {
-            console.log('Order confirmed successfully');
-            alert('✅ تم تأكيد الطلب بنجاح!');
-            localStorage.removeItem('cartItems');
-            orderForm.reset();
-            window.location.href = 'index.html';
-          })
-          .catch(error => {
-            console.error('Error confirming order:', error);
-            alert('حدث خطأ: ' + error.message);
-          })
-          .finally(() => {
-            console.log('Order submission process finished');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'تأكيد الشراء';
-          });
-      });
-    });
-  </script>
-
-  <footer>
-    &copy; 2025 Pick&Click. All rights reserved.
-  </footer>
+    </script>
 </body>
+
 </html>

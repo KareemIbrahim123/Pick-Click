@@ -49,10 +49,6 @@
     button:hover {
       background-color: #005bb5;
     }
-    button:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
-    }
     .toggle-link {
       margin-top: 15px;
       cursor: pointer;
@@ -61,10 +57,6 @@
     }
     .error-message {
       color: red;
-      margin-top: 10px;
-    }
-    .success-message {
-      color: green;
       margin-top: 10px;
     }
     .register-fields {
@@ -92,6 +84,53 @@
       height: 20px;
       margin-left: 10px;
     }
+
+    /* Responsive styles for mobile */
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+        height: auto;
+      }
+      .auth-container {
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: none;
+        max-width: 100%;
+        width: 100%;
+      }
+      h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+      input {
+        padding: 8px;
+        margin: 8px 0;
+        font-size: 14px;
+      }
+      button {
+        padding: 10px;
+        font-size: 14px;
+        margin-top: 8px;
+      }
+      .toggle-link {
+        margin-top: 10px;
+        font-size: 14px;
+      }
+      .error-message {
+        font-size: 14px;
+        margin-top: 8px;
+      }
+      .google-btn {
+        padding: 10px;
+        font-size: 14px;
+        margin-top: 8px;
+      }
+      .google-icon {
+        width: 18px;
+        height: 18px;
+        margin-left: 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -109,10 +148,9 @@
     <div class="toggle-link" id="toggle-form">ليس لديك حساب؟ سجل الآن</div>
     <button id="google-signin" class="google-btn">
       <span>تسجيل الدخول بواسطة Google</span>
-      <img src="transparent-google-logo-google-logo-with-colorful-letters-on-black-1710875297222.webp" class="google-icon" alt="Google logo" />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" class="google-icon" alt="Google logo" />
     </button>
     <div class="error-message" id="error-message"></div>
-    <div class="success-message" id="success-message"></div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -137,7 +175,6 @@
     const authButton = document.getElementById('auth-button');
     const toggleForm = document.getElementById('toggle-form');
     const errorMessage = document.getElementById('error-message');
-    const successMessage = document.getElementById('success-message'); // إضافة رسالة النجاح
     const registerFields = document.getElementById('register-fields');
     const googleSignInBtn = document.getElementById('google-signin');
 
@@ -161,14 +198,12 @@
         registerFields.style.display = 'block';
       }
       errorMessage.textContent = '';
-      successMessage.textContent = ''; // مسح رسالة النجاح عند تبديل النموذج
     });
 
     authButton.addEventListener('click', () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       errorMessage.textContent = '';
-      successMessage.textContent = ''; // مسح رسالة النجاح
 
       if (isLogin) {
         auth.signInWithEmailAndPassword(email, password)
@@ -200,42 +235,21 @@
           return;
         }
 
-        // تعطيل الزر ومنع المستخدم من الضغط عليه مرة أخرى
-        authButton.disabled = true;
-        authButton.textContent = 'جاري التسجيل...';
-
-       auth.createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
           .then((userCredential) => {
-            const user = userCredential.user;
-            const userData = {
+            return db.collection('users').doc(userCredential.user.uid).set({
               fullName: fullName,
               email: email,
               phone: phone,
               address: address,
               createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            // إضافة هذا السطر لعرض البيانات في الكونسول قبل الإرسال
-            console.log("البيانات اللي بيتم إرسالها إلى Firestore:", userData);
-
-            // إرسال رابط التحقق
-            return user.sendEmailVerification()
-              .then(() => {
-                // بعد إرسال رابط التحقق، قم بتخزين بيانات المستخدم في Firestore
-                return db.collection('users').doc(user.uid).set(userData);
-              })
-              .then(() => {
-                successMessage.textContent = 'تم إنشاء الحساب. يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب.';
-                auth.signOut();
-              });
+            });
+          })
+          .then(() => {
+            window.location.href = redirectUrl;
           })
           .catch(error => {
             errorMessage.textContent = error.message;
-          })
-          .finally(() => {
-            // إعادة تمكين الزر بغض النظر عن النتيجة
-            authButton.disabled = false;
-            authButton.textContent = 'تسجيل';
           });
       }
     });
@@ -265,10 +279,8 @@
     });
 
     auth.onAuthStateChanged(user => {
-      if (user && user.emailVerified) {
+      if (user) {
         window.location.href = redirectUrl;
-      } else if (user) {
-        auth.signOut();
       }
     });
   </script>
